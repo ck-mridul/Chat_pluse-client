@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon } from '@heroicons/react/24/outline'
 import 'tailwindcss/tailwind.css'; //react styles
@@ -6,6 +6,10 @@ import {useSelector} from 'react-redux'
 import {selectUser} from '../Redux/userSlice'
 import { clearUser } from "../Redux/userSlice";
 import { store } from "../Redux/store";
+import Modal from './Modals/UserUpdate';
+import { useNavigate } from 'react-router-dom';
+
+
 
 
 function classNames(...classes) {
@@ -14,10 +18,23 @@ function classNames(...classes) {
 
 export default function Example() {
   const user = useSelector(selectUser)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate()
+
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleLogout =()=>{
     store.dispatch(clearUser())
     localStorage.clear();
+    navigate('/')
+    
   }
 
   return (
@@ -54,7 +71,7 @@ export default function Example() {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        src={user.image}
                         alt=""
                       />
                     </Menu.Button>
@@ -75,7 +92,7 @@ export default function Example() {
 
                     <div className={'flex flex-row w-max justify-center gap-2.5 border border-2 border-primary border-slate-400 shadow p-2.5 rounded m-1'}>
                               <div style={{width: '50px', height: '50px'}}>
-                                  <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                  <img src={user.image}
                                        className={'object-cover rounded h-full w-full border-accent-color-one dark:border-dark-accent-color-one'}/>
                               </div>
                               <div className={'w-max'}>
@@ -90,7 +107,7 @@ export default function Example() {
                       <Menu.Item>
                         {({ active }) => (
                           <p
-                            
+                            onClick={openModal}
                             className={classNames(active ? 'bg-gray-100 text-slate-400' : '', 'block px-4 py-2 text-sm text-slate-400 text-gray-700')}
                           >
                             Update Profile
@@ -116,6 +133,8 @@ export default function Example() {
 
           
         </>
+        <Modal isOpen={isModalOpen} onClose={closeModal} user={user} />
+
     </Disclosure>
   )
 }

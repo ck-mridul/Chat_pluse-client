@@ -24,4 +24,4 @@ axiosAuth.interceptors.request.use(
   }
 );
 
-export default axios;
+export default axiosAuth;

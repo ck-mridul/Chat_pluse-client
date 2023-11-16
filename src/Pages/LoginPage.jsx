@@ -2,18 +2,17 @@ import React, { useState } from 'react';
 import LoginBanner from '../assets/Banner/login-page-banner.png'
 import LogoBanner from '../assets/logo/dark-logo-banner.png'
 import { PasswordField } from '../Componets/PasswordInput';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { userlogin } from '../services/api/auth';
+import { Link, useNavigate } from 'react-router-dom';
+import { userlogin, adminlogin } from '../services/api/auth';
 
 
 
-function LoginPage() {
+function LoginPage({login,register=false,admin=false}) {
   
 
   const [formData, setFormData] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate()
-  const location = useLocation()
 
   
   const handleChange =(e) => {
@@ -24,13 +23,25 @@ function LoginPage() {
   const handleSubmit =()=>{
     setErrorMsg('')
 
-    userlogin(formData)
+    if(admin){
+      adminlogin(formData)
+    .then(()=>{
+      navigate('/admin')
+    })
+    .catch((e)=>{
+      setErrorMsg(e.response.data)
+    })
+    }
+    
+    else{
+      userlogin(formData)
     .then(()=>{
       navigate('/')
     })
     .catch((e)=>{
       setErrorMsg(e.response.data)
     })
+    }
   }
 
   return (
@@ -40,7 +51,7 @@ function LoginPage() {
       <div className="w-3/4">
         <img src={LogoBanner} className={'object-cover'} alt="Logo" />
       </div>
-      <p className="text-center font-semibold italic text-white">Login to your Account</p>
+      <p className="text-center font-semibold italic text-white">{login}</p>
       
         <div style={{width:'50%'}}>
 
@@ -58,7 +69,7 @@ function LoginPage() {
           <button onClick={handleSubmit} className="bg-slate-900 text-white  p-2 rounded" >
             Login
           </button>
-      <Link to={'/register'} className='text-white'>New here? Click here</Link>
+     {register && <Link to={'/register'} className='text-white'>New here? Click here</Link>}
 
       
     </section>
