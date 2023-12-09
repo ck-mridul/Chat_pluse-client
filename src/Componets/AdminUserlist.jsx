@@ -23,7 +23,7 @@ function AdminUserlist() {
     userlist().then((res) => {
       setUsers(res.data);
     });
-  }, []);
+  }, [users]);
 
   return (
     <div className="flex justify-center items-center m-5">
@@ -48,10 +48,8 @@ function AdminUserlist() {
                 <td className="py-3 px-6 text-left">{user.name}</td>
                 <td className="py-3 px-6 text-left">{user.email}</td>
                 <td className="py-3 px-6 text-center">
-                  <button className="bg-yellow-400 hover:bg-yellow-500 text-white py-2 px-4 rounded" onClick={() => handleShow(index)}>
-                    Edit
-                  </button>
-                  <button className="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded ml-2">Delete</button>
+                 
+                  <button className="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded ml-2">Block</button>
                   <Modal show={show[index]} onHide={() => handleClose(index)}>
                     <Modal.Header closeButton>
                       <Modal.Title>Edit User</Modal.Title>

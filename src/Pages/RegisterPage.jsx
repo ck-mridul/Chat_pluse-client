@@ -1,17 +1,28 @@
-import React, { useState } from 'react';
-import SignupBanner from '../assets/Banner/signup-page-banner.png'
-import LogoBanner from '../assets/logo/dark-logo-banner.png'
+import React, { useEffect, useState } from 'react';
 import { PasswordField } from '../Componets/PasswordInput';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate,useLocation } from 'react-router-dom';
 import {userRegister} from '../services/api/auth'
 import Swal from 'sweetalert2';
+import {useSelector} from "react-redux";
+
 
 
 function RegisterPage() {
 
   const [formData, setFormData] = useState({password: ''});
   const [inputError, setInputError] = useState({});
+  const user = useSelector(state => state.user.user);
   const navigate = useNavigate()
+  const location = useLocation()
+  
+  useEffect(() => {
+    if(user){
+      const previousPath = location.state?.from || '/';
+      navigate(previousPath)
+    }
+    
+  }, [user]);
+
   const sweetalert = ()=>{
     Swal.fire({
       title: 'Successfully Registered ',
@@ -70,9 +81,7 @@ function RegisterPage() {
         break;
     }
   }
-  const check=()=>{
-    console.log(inputError)
-  }
+  
 
   const handleChange =(e)=>{
     const {name,value} = e.target
@@ -105,16 +114,10 @@ function RegisterPage() {
   
   return (
     <>
-  <section className="mt-16 flex flex-col md:flex-row w-full">
-    <div className="hidden md:flex w-2/4 justify-center">
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <img src={SignupBanner} style={{ width: '100%', height: 'auto' }} alt="Signup" />
-      </div>
-    </div>
-    <section className="w-full md:w-2/4 flex flex-col justify-center items-center gap-2 p-2 md:p-8">
-      <div className="w-3/4">
-        <img src={LogoBanner} className={'object-cover'} alt="Logo" />
-      </div>
+  {/* <section className="mt-16 flex flex-col md:flex-row w-full"> */}
+    
+    <section className="w-full  flex flex-col justify-center items-center gap-2 p-2 md:p-8">
+      
       <p className="text-center font-semibold italic text-white">Register your Account here!</p>
       <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center">
         <div style={{width:'50%'}}>
@@ -131,11 +134,11 @@ function RegisterPage() {
           className={'h-10 w-full text-white focus:outline-0  mb-4 bg-dark-primary p-3 rounded-md'} 
           required/>
           {inputError.email && <span className="text-red-500" > {inputError.email} </span>}
-        <PasswordField autocomplete="new-password" className='mb-4' 
+        <PasswordField autoComplete="new-password" className='mb-4' 
           name="password" onChange={handleChange} 
           placeholder={'Password'} required/>
           {inputError.password && <span className="text-red-500" > {inputError.password} </span>}
-        <PasswordField autocomplete="new-password" placeholder={'Repeat Password'} 
+        <PasswordField autoComplete="new-password" placeholder={'Repeat Password'} 
           onChange={handleChange} 
           name="password1" required/>
           {inputError.password1 && <span className="text-red-500" > {inputError.password1} </span>}
@@ -144,9 +147,9 @@ function RegisterPage() {
           Register
         </button>
       </form>
-      <button onClick={check}>check</button>
-        <Link to={'/login'} className='text-white'>New here? Click here</Link>
-    </section>
+     
+        <Link to={'/login'} className='text-white'>Already have an account? Click here</Link>
+    {/* </section> */}
   </section>
 
 

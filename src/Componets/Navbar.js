@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { BellIcon } from '@heroicons/react/24/outline'
+import { BellIcon,UserCircleIcon } from '@heroicons/react/24/outline'
 import 'tailwindcss/tailwind.css'; //react styles
 import {useSelector} from 'react-redux'
 import {selectUser} from '../Redux/userSlice'
@@ -8,6 +8,7 @@ import { clearUser } from "../Redux/userSlice";
 import { store } from "../Redux/store";
 import Modal from './Modals/UserUpdate';
 import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -69,11 +70,11 @@ export default function Example() {
                     <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
-                      <img
+                      {user.image ?<img
                         className="h-8 w-8 rounded-full"
                         src={user.image}
                         alt=""
-                      />
+                      /> : <UserCircleIcon className="w-10 h-10 text-gray-400" />}
                     </Menu.Button>
                   </div>
                   <Transition
@@ -92,8 +93,9 @@ export default function Example() {
 
                     <div className={'flex flex-row w-max justify-center gap-2.5 border border-2 border-primary border-slate-400 shadow p-2.5 rounded m-1'}>
                               <div style={{width: '50px', height: '50px'}}>
-                                  <img src={user.image}
+                                  {user.image ? <img src={user.image}
                                        className={'object-cover rounded h-full w-full border-accent-color-one dark:border-dark-accent-color-one'}/>
+                                      :<UserCircleIcon className="w-10 h-10 text-gray-400" />}
                               </div>
                               <div className={'w-max'}>
                                   <p className={ 'block px-4 py-2 text-sm text-slate-400 text-gray-700'}>Logined as</p>

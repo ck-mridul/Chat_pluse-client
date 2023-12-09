@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
-import LoginBanner from '../assets/Banner/login-page-banner.png'
-import LogoBanner from '../assets/logo/dark-logo-banner.png'
-import { PasswordField } from '../Componets/PasswordInput';
-import { Link, useNavigate } from 'react-router-dom';
-import { userlogin, adminlogin } from '../services/api/auth';
+import React, { useEffect, useState } from 'react';
 
+import { PasswordField } from '../Componets/PasswordInput';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { userlogin, adminlogin } from '../services/api/auth';
+import {useSelector} from "react-redux";
 
 
 function LoginPage({login,register=false,admin=false}) {
-  
-
-  const [formData, setFormData] = useState('');
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [errorMsg, setErrorMsg] = useState('');
+  const user = useSelector(state => state.user.user);
   const navigate = useNavigate()
+  const location = useLocation()
 
+  useEffect(() => {
+    if(user){
+      const previousPath = location.state?.from || '/';
+      navigate(previousPath)
+    }
+    
+  }, [user]);
   
   const handleChange =(e) => {
     const { name, value } = e.target;
@@ -46,14 +52,12 @@ function LoginPage({login,register=false,admin=false}) {
 
   return (
     <>
-  <section className="mt-16 flex flex-col md:flex-row w-full">
-  <section className="w-full md:w-2/4 flex flex-col justify-center items-center gap-2 p-2 md:p-8">
-      <div className="w-3/4">
-        <img src={LogoBanner} className={'object-cover'} alt="Logo" />
-      </div>
+  {/* <section className="mt-16 flex flex-col md:flex-row w-full"> */}
+  <div className=" flex min-h-screen flex-col justify-center items-center gap-2 p-2 md:p-8">
+      
       <p className="text-center font-semibold italic text-white">{login}</p>
       
-        <div style={{width:'50%'}}>
+        <div style={{width:'25%'}}>
 
           <input placeholder='Email' value={formData.email} 
           onChange={handleChange} name='email'
@@ -72,13 +76,9 @@ function LoginPage({login,register=false,admin=false}) {
      {register && <Link to={'/register'} className='text-white'>New here? Click here</Link>}
 
       
-    </section>
-    <div className="hidden md:flex w-2/4 justify-center">
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <img src={LoginBanner} style={{ width: '100%', height: 'auto' }} alt="Login" />
-      </div>
     </div>
-  </section>
+    
+  {/* </section> */}
 
 
 </>

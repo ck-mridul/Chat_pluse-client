@@ -5,18 +5,21 @@ import { userProfileUpdate } from '../../services/api/auth';
 const Modal = ({ isOpen, onClose, user }) => {
   
   const [name, setName] = useState(user.name);
-  const [img, setImg] = useState('');
+  const [img, setImg] = useState();
 
   if (!isOpen) return null;
 
   const handleSubmit =()=>{
     const formData = new FormData();
     formData.append('name',name)
-    formData.append('image',img)
+    if(img)formData.append('image',img)
     userProfileUpdate(formData).then((res)=>{
         console.log(res)
-        
         onClose()
+
+    })
+    .catch((e)=>{
+      console.log(e)
     })
   }
 
@@ -36,6 +39,7 @@ const Modal = ({ isOpen, onClose, user }) => {
           <label htmlFor="img" className="block mb-1">
             Profile Photo:
             </label>
+            {img && <div className='w-20 h-20 m-2'><img src={URL.createObjectURL(img)} alt="User Profile" /></div>}
           <input id='img' accept="image/*" onChange={(e)=>{setImg(e.target.files[0])}} className={'text-white mb-4 p-3'} 
           type='file'/>
           

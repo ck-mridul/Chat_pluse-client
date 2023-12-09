@@ -1,11 +1,13 @@
 import axiosAuth,{axiosInstance} from "./axios_config";
 import { setUser } from "../../Redux/userSlice";
 import { store } from "../../Redux/store";
+import { baseURL } from "./axios_config";
 
 export const userlogin = async ({email,password})=>{
     try{
-        const response = await axiosInstance.post('/authentication/token/',{email,password})
+        const response = await axiosInstance.post('/authentication/token/',{email,password},{withCredentials:true})
         const {user,tokens} = response.data
+        if(user.image) user.image = baseURL + user.image
         localStorage.setItem('accessToken', tokens.access)
         localStorage.setItem('refreshToken', tokens.refresh)
         localStorage.setItem('user', JSON.stringify(user))
@@ -41,7 +43,7 @@ export const userProfileUpdate = async (formData)=>{
         },})
         localStorage.setItem('user', JSON.stringify(response.data))
         store.dispatch(setUser(response.data))
-
+        console.log(response.data)
         return await Promise.resolve(response);
     }
     catch(error){

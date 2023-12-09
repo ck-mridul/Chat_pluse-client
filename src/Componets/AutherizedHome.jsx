@@ -1,28 +1,39 @@
-import React from 'react'
-import logo from '../assets/logo/dark-logo-banner.png'
+import React, { useState } from 'react'
+import { createRoom } from '../services/api/room'
+import { useNavigate } from 'react-router-dom'
+
 
 function AutherizedHome() {
     const history = []
+    const navigate = useNavigate()
+    const [input_id, setInput_id] = useState('');
+    
+    const create_Room = async () => {
+        const room_id = await createRoom();
+        console.log(room_id)
+        navigate(`/room/${room_id}`);
+    }
+    const joinClassroom =()=>{
+        navigate(`/room/${input_id}`)
+    }
     
   return (
     <>
             <main className='flex flex-col md:flex-row items-center justify-center h-full gap-3.5 md:gap-0 p-3.5 md:p-0'>
                 <div className={'h-full w-full flex justify-center items-center'}>
                     <div className={'w-[90%] md:w-1/2 flex flex-col gap-9'}>
-                        <div className={''}>
-                            <img src={logo} alt={'logo'}/>
-                        </div>
+                       
                         <div className={'w-full flex flex-col gap-2.5'}>
                             <div className={'w-full flex flex-row gap-2.5'}>
                                 <input
                                     type={'text'}
                                     placeholder={'Enter room id'}
                                     className={'h-10 w-full focus:outline-0 mb-4 text-white bg-dark-primary text-wight p-3 rounded-md'}                                    // value={roomId}
-                                    // onChange={(e) => setRoomId(e.target.value)}
+                                    onChange={(e) => setInput_id(e.target.value)}
                                 />
                                 <button
                                     className="bg-slate-900 text-white ps-2 pe-2 h-10 rounded"
-                                    // onClick={joinClassroom}
+                                    onClick={joinClassroom}
                                 >
                                     {/* {joining ? 'Joining...' : 'Join'}*/} Join 
                                 </button>
@@ -30,7 +41,7 @@ function AutherizedHome() {
                             <div>
                                 <button
                                     className="bg-slate-900 text-white w-full p-2 rounded"
-                                    // onClick={() => setCreateRoomModal(true)}
+                                    onClick={create_Room}
                                 >
                                     Create Room
                                 </button>
@@ -64,6 +75,7 @@ function AutherizedHome() {
                 </div>
 
             </main>
+           
     </>
   )
 }
