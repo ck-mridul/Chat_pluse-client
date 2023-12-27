@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon,UserCircleIcon } from '@heroicons/react/24/outline'
 import 'tailwindcss/tailwind.css'; //react styles
@@ -8,6 +8,7 @@ import { clearUser } from "../Redux/userSlice";
 import { store } from "../Redux/store";
 import Modal from './Modals/UserUpdate';
 import { useNavigate } from 'react-router-dom';
+import { getUser } from '../services/api/auth';
 
 
 
@@ -22,6 +23,8 @@ export default function Example() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate()
 
+
+  
 
   const openModal = () => {
     setIsModalOpen(true);

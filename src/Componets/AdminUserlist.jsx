@@ -6,13 +6,20 @@ import { userlist } from '../services/api/admin';
 function AdminUserlist() {
   const [users, setUsers] = useState([]);
   const [show, setShow] = useState(Array(13).fill(false));
+  const [block, setBlock] = useState(true);
 
   const handleShow = (index) => {
     const updatedModals = [...show];
     updatedModals[index] = true;
     setShow(updatedModals);
   };
-
+  const handleBlock = ()=>{
+    if(block){
+      setBlock(false)
+    }else{
+      setBlock(true)
+    }
+  }
   const handleClose = (index) => {
     const updatedModals = [...show];
     updatedModals[index] = false;
@@ -23,7 +30,7 @@ function AdminUserlist() {
     userlist().then((res) => {
       setUsers(res.data);
     });
-  }, [users]);
+  }, []);
 
   return (
     <div className="flex justify-center items-center m-5">
@@ -39,11 +46,23 @@ function AdminUserlist() {
         </tr>
       </thead>
       <tbody className="text-white text-sm font-light">
+      <tr key={1} className="border-b border-gray-200 ">
+                <td className="py-3 px-6 text-left whitespace-nowrap"> 1</td>
+                <td className="py-3 px-6 text-left">1</td>
+                <td className="py-3 px-6 text-left">Mridul</td>
+                <td className="py-3 px-6 text-left">mridul16@gmail.com</td>
+                <td className="py-3 px-6 text-center">
+                 
+                  <button onClick={handleBlock} className="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded ml-2">{block? 'Block' : 'Unblock'}</button>
+                  
+                </td>
+              </tr>
         {users &&
+        
           users.map((user, index) => {
             return (
-              <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
-                <td className="py-3 px-6 text-left whitespace-nowrap">{index + 1}</td>
+              <tr key={index} className="border-b border-gray-200 ">
+                <td className="py-3 px-6 text-left whitespace-nowrap">{index + 2}</td>
                 <td className="py-3 px-6 text-left">{index}</td>
                 <td className="py-3 px-6 text-left">{user.name}</td>
                 <td className="py-3 px-6 text-left">{user.email}</td>
