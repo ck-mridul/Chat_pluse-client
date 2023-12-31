@@ -32,6 +32,7 @@ export default function App() {
         container: element,
         showPreJoinView: false,
         showTextChat: false,
+        maxUsers: 3,
         sharedLinks: [
           {
             name: 'Copy link',

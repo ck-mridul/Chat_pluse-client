@@ -1,9 +1,15 @@
 import axiosAuth from "./axios_config";
-
+import { clearUser } from "../../Redux/userSlice";
+import { store } from "../../Redux/store";
 
 
 export const createRoom = async ()=>{
-    const response = await axiosAuth.get('createroom/')
-    console.log(response.data)
-    return response.data
+    try{
+        const response = await axiosAuth.get('createroom/')
+        return response.data
+    }catch{
+        store.dispatch(clearUser())
+        localStorage.clear()
+    }
+    
 }

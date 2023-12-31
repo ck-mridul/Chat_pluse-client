@@ -73,3 +73,12 @@ export const adminlogin = async ({email,password})=>{
         return await Promise.reject(error)
     }
 }
+
+// export const userLogout = async ()=>{
+//     try{
+//         const response = await axiosAuth.post('/authentication/logout/')
+//         return await Promise.resolve(response);
+//     }catch(error){
+//         return await Promise.reject(error)
+//     }
+// }

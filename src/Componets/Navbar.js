@@ -8,7 +8,7 @@ import { clearUser } from "../Redux/userSlice";
 import { store } from "../Redux/store";
 import Modal from './Modals/UserUpdate';
 import { useNavigate } from 'react-router-dom';
-import { getUser } from '../services/api/auth';
+// import { getUser, userLogout } from '../services/api/auth';
 
 
 
@@ -35,9 +35,10 @@ export default function Example() {
   };
 
   const handleLogout =()=>{
-    store.dispatch(clearUser())
-    localStorage.clear();
-    navigate('/')
+      store.dispatch(clearUser())
+      localStorage.clear();
+      navigate('/')
+    
     
   }
 
@@ -58,12 +59,12 @@ export default function Example() {
                 
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              {user.is_superuser && <span className='text-white me-4 cursor-pointer'>Users</span>}
                 <button
                   type="button"
                   className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
                   <span className="absolute -inset-1.5" />
-                  <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
 

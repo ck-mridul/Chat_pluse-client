@@ -9,7 +9,9 @@ function AutherizedHome() {
     const [input_id, setInput_id] = useState('');
     
     const create_Room = async () => {
+    
         const room_id = await createRoom();
+
         console.log(room_id)
         navigate(`/room/${room_id}`);
     }

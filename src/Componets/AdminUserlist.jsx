@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { userlist } from '../services/api/admin';
+import axiosAuth from '../services/api/axios_config';
 
 function AdminUserlist() {
   const [users, setUsers] = useState([]);
@@ -13,12 +14,13 @@ function AdminUserlist() {
     updatedModals[index] = true;
     setShow(updatedModals);
   };
-  const handleBlock = ()=>{
-    if(block){
-      setBlock(false)
-    }else{
-      setBlock(true)
-    }
+  const handleBlock = (user_id)=>{
+    axiosAuth.patch('/admin/blockuser/',{user_id}).then(()=>{
+      userlist().then((res) => {
+        setUsers(res.data);
+      });
+    })
+
   }
   const handleClose = (index) => {
     const updatedModals = [...show];
@@ -39,36 +41,24 @@ function AdminUserlist() {
       <thead>
         <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
           <th className="py-3 px-6 text-left">Sl</th>
-          <th className="py-3 px-6 text-left">Image</th>
           <th className="py-3 px-6 text-left">Full Name</th>
           <th className="py-3 px-6 text-left">Email</th>
           <th className="py-3 px-6 text-center">Action</th>
         </tr>
       </thead>
       <tbody className="text-white text-sm font-light">
-      <tr key={1} className="border-b border-gray-200 ">
-                <td className="py-3 px-6 text-left whitespace-nowrap"> 1</td>
-                <td className="py-3 px-6 text-left">1</td>
-                <td className="py-3 px-6 text-left">Mridul</td>
-                <td className="py-3 px-6 text-left">mridul16@gmail.com</td>
-                <td className="py-3 px-6 text-center">
-                 
-                  <button onClick={handleBlock} className="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded ml-2">{block? 'Block' : 'Unblock'}</button>
-                  
-                </td>
-              </tr>
+     
         {users &&
         
           users.map((user, index) => {
             return (
               <tr key={index} className="border-b border-gray-200 ">
-                <td className="py-3 px-6 text-left whitespace-nowrap">{index + 2}</td>
-                <td className="py-3 px-6 text-left">{index}</td>
+                <td className="py-3 px-6 text-left whitespace-nowrap">{index + 1}</td>
                 <td className="py-3 px-6 text-left">{user.name}</td>
                 <td className="py-3 px-6 text-left">{user.email}</td>
                 <td className="py-3 px-6 text-center">
                  
-                  <button className="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded ml-2">Block</button>
+                  <button onClick={()=>handleBlock(user.id)} className="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded ml-2">{user.is_active ? 'Block' :'Unblock'}</button>
                   <Modal show={show[index]} onHide={() => handleClose(index)}>
                     <Modal.Header closeButton>
                       <Modal.Title>Edit User</Modal.Title>
