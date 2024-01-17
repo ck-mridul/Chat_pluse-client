@@ -18,14 +18,9 @@ function App() {
         <Routes>
           <Route element={<ProtectedRoute><RoomPage/></ProtectedRoute>} path="/videocall"/>
           <Route element={<EmailVerification/>} path="/verify/:token"/>
-          <Route element={<ProtectedRoute><HomePage/></ProtectedRoute>} exact path="/" />
-          <Route element={<ProtectedRoute><Home1Page/></ProtectedRoute>} exact path="/home" />
+          <Route element={<ProtectedRoute><Home1Page/></ProtectedRoute>} exact path="/" />
           <Route element={<LoginPage login={'Login to your Account'} register />} path="/login"/>
-          <Route element={<LoginPage login={'Login to Admin'} admin />}  path="/adminlogin"/>
           <Route element={<RegisterPage/>} path="/register"/>
-          <Route element={<AdminProtect><Adminuserlist/></AdminProtect>} path="/user" />
-          <Route element={<AdminProtect><Dashboard/></AdminProtect>} path="/admin" />
-          <Route element={<ProtectedRoute><Subscription/></ProtectedRoute>} path="/subscription" />
         </Routes>
       </BrowserRouter>
      
