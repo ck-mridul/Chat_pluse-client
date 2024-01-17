@@ -53,7 +53,7 @@ function LoginPage({login,register=false,admin=false}) {
   return (
     <>
   {/* <section className="mt-16 flex flex-col md:flex-row w-full"> */}
-  <div className=" flex min-h-screen flex-col justify-center items-center gap-2 p-2 md:p-8">
+  <div className="bg-gray-600 flex min-h-screen flex-col justify-center items-center gap-2 p-2 md:p-8">
       
       <p className="text-center font-semibold italic text-white">{login}</p>
       

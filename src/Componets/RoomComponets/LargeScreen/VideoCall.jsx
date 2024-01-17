@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
-import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import axiosAuth from '../../../services/api/axios_config';
 
 
 
@@ -14,41 +15,66 @@ export function getUrlParams(
 
 
 export default function App() {
-      const roomID = useParams()
-      const user = JSON.parse(localStorage.getItem('user'))
-      const userName = user.name
-      const userID = user.id
-      let myMeeting = async (element) => {
-     // generate Kit Token
-      const appID = 467351366;
-      const serverSecret = "1df8cdebd2a39f923e36f971dbf2df4f";
-      const kitToken =  ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID.room_id,  userID.toString(),  userName);
+  const navigate = useNavigate();
+  
+  const roomID = localStorage.getItem('thread_id');
+  var zp;
 
 
-     // Create instance object from Kit Token.
-      const zp = ZegoUIKitPrebuilt.create(kitToken);
-      // start the call
-      zp.joinRoom({
-        container: element,
-        showPreJoinView: false,
-        showTextChat: false,
-        maxUsers: 3,
-        sharedLinks: [
-          {
-            name: 'Copy link',
-            url:
-             window.location.protocol + '//' + 
-             window.location.host + window.location.pathname +
-              '?roomID=' +
-              roomID,
-          },
-        ],
-        scenario: {
-          mode: ZegoUIKitPrebuilt.GroupCall, // To implement 1-on-1 calls, modify the parameter here to [ZegoUIKitPrebuilt.OneONoneCall].
+useEffect(() => {
+  
+  return () => {
+    zp.hangUp()
+    zp.destroy()
+  };
+}, []);
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  const userName = user.name;
+  const userID = user.id;
+
+  const myMeeting = async (element) => {
+    try {
+    // generate Kit Token
+    const appID = 526677706;
+    const serverSecret = "19eefd1e1df31737b1d5239cb6358209";
+    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
+      appID,
+      serverSecret,
+      roomID,
+      userID.toString(),
+      userName
+    );
+
+    // Create instance object from Kit Token.
+    zp = ZegoUIKitPrebuilt.create(kitToken);
+    
+    
+    // start the call
+    
+    zp.joinRoom({
+      container: element,
+      showPreJoinView: false,
+      showTextChat: false,
+      maxUsers: 2,
+      sharedLinks: [
+        {
+          name: 'Copy link',
+          url:
+            window.location.protocol +
+            '//' +
+            window.location.host +
+            window.location.pathname,
         },
-      });
-
-
+      ],
+      scenario: {
+        mode: ZegoUIKitPrebuilt.GroupCall,
+      },
+    });
+  } catch (error) {
+      console.log(error);
+      navigate('/'); 
+    }
   };
 
   return (

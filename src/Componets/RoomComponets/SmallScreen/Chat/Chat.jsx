@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {IoSend} from "react-icons/io5";
 import { wsURL } from '../../../../services/api/axios_config';
-import { useParams } from 'react-router-dom';
 
 function Chat() {
-    const room_id = useParams()
+    const room_id = localStorage.getItem('thread_id');
     const [message, setMessage] = useState();
     const [messages, setMessages] = useState([]);
     const lastMessageRef = useRef(null);
@@ -13,7 +12,7 @@ function Chat() {
     const user = JSON.parse(localStorage.getItem('user'))
     const endPoint = useMemo(
     () => {
-        return `${wsURL}/ws/chat/${room_id.room_id}/`;
+        return `${wsURL}/ws/chat/${room_id}/`;
     },
     [room_id]
 

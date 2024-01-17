@@ -35,7 +35,7 @@ function AdminUserlist() {
   }, []);
 
   return (
-    <div className="flex justify-center items-center m-5">
+    <div className="flex w-full  justify-center items-center mt-5 me-4 shadow ">
   <div className="bg-slate-700  w-full shadow-md rounded my-6">
     <table className="min-w-max  w-full table-auto">
       <thead>

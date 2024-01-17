@@ -8,6 +8,7 @@ import { clearUser } from "../Redux/userSlice";
 import { store } from "../Redux/store";
 import Modal from './Modals/UserUpdate';
 import { useNavigate } from 'react-router-dom';
+
 // import { getUser, userLogout } from '../services/api/auth';
 
 
@@ -18,7 +19,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export default function Navbar() {
   const user = useSelector(selectUser)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate()
@@ -43,7 +44,7 @@ export default function Example() {
   }
 
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className="bg-gray-800 justify-between">
         <>
           <div className="mx-auto max-w-8xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-12 items-center justify-between">
@@ -59,15 +60,8 @@ export default function Example() {
                 
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              {user.is_superuser && <span className='text-white me-4 cursor-pointer'>Users</span>}
-                <button
-                  type="button"
-                  className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                >
-                  <span className="absolute -inset-1.5" />
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-
+                
+                {/* {!user.premium && <span onClick={()=>navigate('/subscription')} className='font-mono text-lime-100 me-4 cursor-pointer'>Premium</span>} */}
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>

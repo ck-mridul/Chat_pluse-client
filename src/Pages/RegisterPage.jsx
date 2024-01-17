@@ -116,7 +116,7 @@ function RegisterPage() {
     <>
   {/* <section className="mt-16 flex flex-col md:flex-row w-full"> */}
     
-    <section className="w-full  flex flex-col justify-center items-center gap-2 p-2 md:p-8">
+    <section className="w-full bg-gray-600 flex flex-col justify-center items-center gap-2 p-2 md:p-8">
       
       <p className="text-center font-semibold italic text-white">Register your Account here!</p>
       <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center">

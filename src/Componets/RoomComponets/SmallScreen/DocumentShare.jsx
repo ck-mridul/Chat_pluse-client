@@ -2,23 +2,20 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {IoSend} from "react-icons/io5";
 import { FaPlus } from 'react-icons/fa';
 import { GoMoveToBottom } from "react-icons/go";
-import { wsURL } from '../../../services/api/axios_config';
-import { useParams } from 'react-router-dom';
-import axiosAuth from '../../../services/api/axios_config';
-import { baseURL } from '../../../services/api/axios_config';
+import axiosAuth,{ wsURL, baseURL} from '../../../services/api/axios_config';
 
 
 function UsersList() {
     const user = JSON.parse(localStorage.getItem('user'))
     const [documents, setDocuments] = useState([]);
-    const room_id = useParams()
+    const room_id = localStorage.getItem('thread_id');
     const lastMessageRef = useRef(null);
     const [doc, setDoc] = useState();
 
 
     const endPoint = useMemo(
         () => {
-            return `${wsURL}/ws/doc/${room_id.room_id}/`;
+            return `${wsURL}/ws/doc/${room_id}/`;
         },
         [room_id]
 
@@ -32,13 +29,15 @@ function UsersList() {
         };
 
      const saveFile = () =>{
-        console.log('Button clicked')
+        if(!doc) return
 
         let formData = new FormData();
         formData.append("pdf", doc)
         formData.append("name", doc.name)
-        formData.append("room_id",room_id.room_id)
+        formData.append("room_id",room_id)
         formData.append("size",doc.size)
+        formData.append("user_name", user.name)
+        formData.append("user_id", user.id)
 
         let axiosConfig = {
             headers: {
@@ -47,10 +46,9 @@ function UsersList() {
         }
 
         console.log(formData)
-        axiosAuth.post( 'chat/document/', formData, axiosConfig).then(
-            response =>{
-                console.log(response)
+        axiosAuth.post( 'chat/document/', formData, axiosConfig).then(()=>{
                 console.log('File Uploaded Successfully')
+                setDoc()
             }
         ).catch(error =>{
             console.log(error)
@@ -63,7 +61,6 @@ function UsersList() {
         console.log(e,'jjjjjj')
         setDocuments(JSON.parse(e.data))
         console.log(documents)
-        console.log('===============================================================================================')
 
     },[documents])
     useEffect(() => {
@@ -99,13 +96,18 @@ function UsersList() {
                     { documents &&
 
                         documents.map((doc, index) => (
+                            
+                            <div>
                             <div ref={index === documents.length - 1 ? lastMessageRef : null}
                             className="h-20 w-44 ms-2 flex flex-col p-2 bg-slate-700 rounded">
-                                <span className='text-white'>{doc.name}</span>
+                                <span className='text-white overflow-hidden'>{doc.name}</span>
                                 <span className='text-white text-xs mt-2 italic text-slate-300'>{(doc.size/1000000).toPrecision(2)} MB</span>
                                 {/* <div className='rounded-sm bg-gray-300 '></div> */}
                                 <GoMoveToBottom onClick={()=>{handleDownload(doc.pdf,doc.name)}} className='ml-auto text-slate-300 font-bold cursor-pointer'/>
                                  </div>
+                                  <sapan className='text-white ms-4 text-xs'>{user.id == doc.user_id ? 'You' : doc.user_name}</sapan>
+                                  </div>
+                                 
                         ))
                     }
                 </div>

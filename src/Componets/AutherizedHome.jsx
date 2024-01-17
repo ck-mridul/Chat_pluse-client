@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { createRoom } from '../services/api/room'
 import { useNavigate } from 'react-router-dom'
+import axiosAuth from '../services/api/axios_config'
 
 
 function AutherizedHome() {
     const history = []
     const navigate = useNavigate()
     const [input_id, setInput_id] = useState('');
+    const [joinErr, setJoinErr] = useState('');
     
     const create_Room = async () => {
     
@@ -16,12 +18,19 @@ function AutherizedHome() {
         navigate(`/room/${room_id}`);
     }
     const joinClassroom =()=>{
-        navigate(`/room/${input_id}`)
+        axiosAuth.post('joinroom/',{'room_id':input_id}).then((res)=>{
+            navigate(`/room/${input_id}`)
+
+        }).catch((err)=>{
+            if (err.response.status === 404){
+                console.log('wrong room ig')
+            }
+        })
     }
     
   return (
     <>
-            <main className='flex flex-col md:flex-row items-center justify-center h-full gap-3.5 md:gap-0 p-3.5 md:p-0'>
+            <main className='flex bg-gray-600 flex-col md:flex-row items-center justify-center h-full gap-3.5 md:gap-0 p-3.5 md:p-0'>
                 <div className={'h-full w-full flex justify-center items-center'}>
                     <div className={'w-[90%] md:w-1/2 flex flex-col gap-9'}>
                        
