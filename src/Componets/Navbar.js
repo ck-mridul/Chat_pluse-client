@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { BellIcon,UserCircleIcon } from '@heroicons/react/24/outline'
+import {UserCircleIcon } from '@heroicons/react/24/outline'
 import 'tailwindcss/tailwind.css'; //react styles
 import {useSelector} from 'react-redux'
 import {selectUser} from '../Redux/userSlice'
@@ -8,6 +8,8 @@ import { clearUser } from "../Redux/userSlice";
 import { store } from "../Redux/store";
 import Modal from './Modals/UserUpdate';
 import { useNavigate } from 'react-router-dom';
+import { IoMdSettings } from "react-icons/io";
+
 
 // import { getUser, userLogout } from '../services/api/auth';
 
@@ -110,7 +112,7 @@ export default function Navbar() {
                             onClick={openModal}
                             className={classNames(active ? 'bg-gray-100 text-slate-400' : '', 'block px-4 py-2 text-sm text-slate-400 text-gray-700')}
                           >
-                            Update Profile
+                            <IoMdSettings size={20} className='inline-block me-1'/> Settings
                           </p>
                         )}
                       </Menu.Item>

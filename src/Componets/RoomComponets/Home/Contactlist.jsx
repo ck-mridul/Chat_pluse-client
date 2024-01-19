@@ -3,9 +3,13 @@ import AxiosAuth from '../../../services/api/axios_config'
 import axiosAuth, { baseURL } from '../../../services/api/axios_config'
 import { setPeer } from '../../../Redux/peerSlice';
 import { store } from '../../../Redux/store';
+import { clearUser } from '../../../Redux/userSlice';
 import {IoPersonAddOutline} from 'react-icons/io5'
 import { RxCross2 } from "react-icons/rx";
 import { useChangeEffect } from './Context';
+import { useNavigate } from 'react-router-dom';
+import { FaUserCircle } from "react-icons/fa";
+
 
 function Contactlist() {
     const [friends, setFriends] = useState([]);
@@ -14,6 +18,7 @@ function Contactlist() {
     const [search, setSearch] = useState();
     const [searchR, setSearchR] = useState([]);
     const { changeEffect,setChangeEffect } = useChangeEffect();
+    const navigate = useNavigate()
  
     useEffect(() => {
         AxiosAuth.get('/peerchat/').then((res)=>{
@@ -21,6 +26,10 @@ function Contactlist() {
             setFriends(res.data) 
         }).catch((err)=>{
             console.log(err)
+            // localStorage.clear()
+            // store.dispatch(clearUser())
+            // navigate('/login')
+            
         })
         
     }, [changeEffect]);
@@ -77,7 +86,10 @@ function Contactlist() {
                 )}
                  className={`h-16 border ${friend.second_person.id == selectPeer ? 'bg-blue-300' : 'hover:bg-slate-200'} items-center flex cursor-pointer`} >
                 <div className='rounded-full border overflow-hidden h-14 w-14'>
-                    <img className='object-cover' src={baseURL+friend.second_person.image} alt="" />
+                {friend.second_person.image ?<img
+                        src={baseURL+friend.second_person.image}
+                        alt=""
+                      /> : <FaUserCircle className='text-stone-400' size={55}/>}
                 </div>
                 <h3 className='ms-10 tracking-wide text-slate-600 font-medium text-xl font-sans'>{friend.second_person.name}</h3>
             </div>
@@ -91,7 +103,10 @@ function Contactlist() {
                 )}
                  className={`h-16 border ${friend.first_person.id == selectPeer ? 'bg-blue-300' : 'hover:bg-slate-200'} items-center flex cursor-pointer`}>
                     <div className='rounded-full border overflow-hidden h-14 w-14'>
-                        <img className='object-cover' src={baseURL+friend.first_person.img} alt="" />
+                    {friend.first_person.image ?<img
+                        src={baseURL+friend.first_person.image}
+                        alt=""
+                      /> : <FaUserCircle className='text-stone-400' size={55}/>}
                     </div>
                     <h3 className='ms-10 tracking-wide text-slate-600 font-medium text-xl font-sans'>{friend.first_person.name}</h3>
                 </div>

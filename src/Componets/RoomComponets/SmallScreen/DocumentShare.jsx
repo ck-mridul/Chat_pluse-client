@@ -45,7 +45,7 @@ function UsersList() {
             }
         }
 
-        console.log(formData)
+        console.log('form',formData)
         axiosAuth.post( 'chat/document/', formData, axiosConfig).then(()=>{
                 console.log('File Uploaded Successfully')
                 setDoc()

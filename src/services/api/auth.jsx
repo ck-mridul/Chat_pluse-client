@@ -60,19 +60,7 @@ export const userProfileUpdate = async (formData)=>{
     }
 }
 
-export const adminlogin = async ({email,password})=>{
-    try{
-        const response = await axiosInstance.post('/authentication/adminlogin/',{email,password})
-        const {user,tokens} = response.data
-        localStorage.setItem('accessToken', tokens.access)
-        localStorage.setItem('refreshToken', tokens.refresh)
-        localStorage.setItem('user', JSON.stringify(user))
-        store.dispatch(setUser(user))
-        return await Promise.resolve(response);
-    }catch(error){
-        return await Promise.reject(error)
-    }
-}
+
 
 // export const userLogout = async ()=>{
 //     try{

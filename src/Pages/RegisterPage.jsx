@@ -4,6 +4,8 @@ import { Link, useNavigate,useLocation } from 'react-router-dom';
 import {userRegister} from '../services/api/auth'
 import Swal from 'sweetalert2';
 import {useSelector} from "react-redux";
+import TextInput from '../Componets/TextInput';
+import {  toast } from 'react-toastify';
 
 
 
@@ -14,6 +16,13 @@ function RegisterPage() {
   const user = useSelector(state => state.user.user);
   const navigate = useNavigate()
   const location = useLocation()
+
+  const errorTost = (errorMsg) => {
+    toast.error(errorMsg, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000, // 3 seconds
+    });
+  };
   
   useEffect(() => {
     if(user){
@@ -95,16 +104,15 @@ function RegisterPage() {
     formValidation('password1', formData.password1);
   
     if (inputError.name || inputError.email || inputError.password || inputError.password1) {
-      console.log(inputError);
       return false
     }else{
-      console.log('first')
+      
       userRegister(formData).then(()=>{
         sweetalert()
         navigate('/login')
       }).catch((e)=>{
-        
-          alert(e.response.data.email)
+        errorTost(e.response.data)
+         
         });
       
     }
@@ -114,46 +122,103 @@ function RegisterPage() {
   
   return (
     <>
-  {/* <section className="mt-16 flex flex-col md:flex-row w-full"> */}
+  <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
     
-    <section className="w-full bg-gray-600 flex flex-col justify-center items-center gap-2 p-2 md:p-8">
-      
-      <p className="text-center font-semibold italic text-white">Register your Account here!</p>
-      <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center">
-        <div style={{width:'50%'}}>
-          <>
-        <input placeholder='Name' name="name" type="text" 
-          onChange={handleChange} 
-          className={'h-10 w-full text-white focus:outline-0 mb-4 bg-dark-primary p-3 rounded-md'} 
-          required/>
-          </>
-          {inputError.name && <span className="text-red-500" > {inputError.name} </span>}
+    <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+      <img
+        className="mx-auto h-10 w-auto"
+        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+        alt="Your Company"
+      />
+      <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        Sign up your Account here!
+      </h2>
+    </div>
+
+    <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
           
-        <input placeholder='Email' name="email" type='email'
-          onChange={handleChange} 
-          className={'h-10 w-full text-white focus:outline-0  mb-4 bg-dark-primary p-3 rounded-md'} 
-          required/>
-          {inputError.email && <span className="text-red-500" > {inputError.email} </span>}
-        <PasswordField autoComplete="new-password" className='mb-4' 
-          name="password" onChange={handleChange} 
-          placeholder={'Password'} required/>
-          {inputError.password && <span className="text-red-500" > {inputError.password} </span>}
-        <PasswordField autoComplete="new-password" placeholder={'Repeat Password'} 
-          onChange={handleChange} 
-          name="password1" required/>
-          {inputError.password1 && <span className="text-red-500" > {inputError.password1} </span>}
+          <TextInput
+          id="name"
+          name="name"
+          type="text"
+          placeholder='Full Name' 
+          value={formData.name}
+          onChange={handleChange}
+          />
+          {inputError.name && <span className="text-red-500" > {inputError.name} </span>}
         </div>
-        <button type="submit" className="bg-slate-900 text-white  p-2 rounded" >
-          Register
-        </button>
+
+        <div>
+          
+          <TextInput
+          id="email"
+          placeholder='Email'
+          name="email"
+          type='email'
+          onChange={handleChange} 
+          />
+          {inputError.email && <span className="text-red-500" > {inputError.email} </span>}
+        </div>
+
+
+
+        <div>
+          
+          <div className="mt-2">
+            
+            <PasswordField
+              autoComplete="new-password"
+              name="password" 
+              onChange={handleChange} 
+              placeholder={'Password'} 
+              required
+              />
+        {inputError.password && 
+        <span className="text-red-500" > 
+        {inputError.password}
+        </span>
+        }
+
+            <PasswordField
+            autoComplete="new-password"
+            placeholder={'Confirm Password'}
+            onChange={handleChange} 
+            name="password1" 
+            required
+            />
+            {inputError.password1 && 
+          <span className="text-red-500" > 
+          {inputError.password1}
+          </span>
+          }
+
+          </div>
+        </div>
+
+        <div>
+          <button
+            onClick={handleSubmit}
+            type="button"
+            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Sign up
+          </button>
+        </div>
       </form>
-     
-        <Link to={'/login'} className='text-white'>Already have an account? Click here</Link>
-    {/* </section> */}
-  </section>
+
+      <p className="mt-10 text-center text-sm text-gray-500">
+      Already have an account?{' '}
+        <Link to={'/login'} className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+          Sign in
+        </Link>
+      </p>
+    </div>
+  </div>
 
 
-</>
+  </>
   );
 }
 

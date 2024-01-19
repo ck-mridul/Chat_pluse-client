@@ -24,10 +24,12 @@ export const PasswordField = (props) => {
         toggleHidePassword();
     };
     return (
-        <div className="mb-4 bg-dark-primary rounded-md"
+        <div className="mb-4 border border-indigo-300 rounded-md"
              style={{padding: 0, display: "flex", flexDirection: "row", alignItems: "center"}}>
             <input {...props} type={showPassword ? 'text' : 'password'}
-                   className={'w-full h-full focus:outline-0 bg-dark-primary text-white p-3 rounded-md'}/>
+                   className={'w-full h-full  p-3 rounded-md'}
+                   required
+                   />
             <i onTouchStart={handleTouchStart}
                onTouchEnd={handleTouchEnd}
                onClick={(e) => e.preventDefault()}

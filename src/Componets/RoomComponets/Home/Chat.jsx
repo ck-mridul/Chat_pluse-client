@@ -6,12 +6,13 @@ import axiosAuth, { baseURL } from '../../../services/api/axios_config';
 import { wsURL } from '../../../services/api/axios_config';
 import chat_img from '../../../assets/logo/chat_img.webp'
 import Dropdown from './Dropdown';
-import {store} from '../../../Redux/store'
-import {clearUser} from '../../../Redux/userSlice'
 import { MdCall,MdCallEnd } from "react-icons/md";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { FaUserCircle } from "react-icons/fa"; 
+import MediaPreviewModal from '../../Modals/sendMedias';
+import { IoSend } from "react-icons/io5";
+
 
 
 
@@ -20,27 +21,26 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const [msg, setMsg] = useState('');
   const [call, setCall] = useState();
+  const [media, setMedia] = useState();
   const lastMessageRef = useRef(null);
   
   const user = JSON.parse(localStorage.getItem('user'))
   const Tid = peer.Tid
-  const webSocket = useMemo(() => new WebSocket(wsURL+`/ws/peerchat/${user.id}/`), []);
   const navigate = useNavigate()
+  const token = localStorage.getItem('accessToken')
+ 
+  const webSocket = useMemo(() => new WebSocket(wsURL+`/ws/peerchat/${user.id}/?token=${token}`), []);
 
   useEffect(() => {
-    axiosAuth.post('/peerchat/getallmsg/',{Tid}).then((res)=>{
-      console.log(res.data)
-      setMessages(res.data)
-      console.log(user.id)
-    }).catch((err)=>{
-      // if(err.response.status === 401){
-      //   localStorage.clear()
-        
-      // }
-      console.log(err)
-    })
+    if(Tid){
+      axiosAuth.post('/peerchat/getallmsg/',{Tid}).then((res)=>{
+        setMessages(res.data)
+      }).catch((err)=>{
+        console.log(err)
+      })
+    }
     
-  }, [peer]);
+  }, [peer,Tid]);
 
   useEffect(() => {
     if (lastMessageRef.current) {
@@ -58,7 +58,6 @@ const declineNotification = () => {
 
   const handleSendMsg = (e)=>{
     e.preventDefault()
-    console.log('submited',msg)
     const data = JSON.stringify({
       message:msg,
       sent_by:user.id,
@@ -68,6 +67,30 @@ const declineNotification = () => {
     webSocket.send(data)
     setMsg('')
 
+  }
+
+  const sendMedia = ()=>{ 
+    let formData = new FormData
+    let media_type
+    if(media.type.startsWith('image')){
+      media_type = 'image'
+    }else if(media.type.startsWith('video')){
+      media_type = 'video'
+    }else{
+      media_type = 'other'
+    }
+    
+    formData.append('media',media)
+    console.log(formData, 'media-',media)
+    const data = JSON.stringify({
+      media : formData, 
+      sent_by:user.id,
+      send_to:peer.userId,
+      thread_id:Tid,
+      media_type:media_type
+    })
+    webSocket.send(data)
+    setMedia()
   }
 
   const handleVideoCall = ()=>{
@@ -109,23 +132,19 @@ const declineNotification = () => {
   webSocket.onmessage = (message)=>{
     const msg = JSON.parse(message.data)
      if(msg.type === 'call'){
-      setCall(msg) 
-      console.log(msg,'call')
-      return 
+       setCall(msg) 
+       return 
      }
      else if(msg.type === 'decline'){
-       console.log(msg,'decline')
        declineNotification()
       return 
      }
      else if(msg.type === 'answer'){
-      console.log(msg,'answer')
       localStorage.setItem('thread_id',msg.thread_id)
       navigate('/videocall')
      return 
     }
      
-    console.log(msg,'from socket')
     setMessages(prevMessages => [...prevMessages, msg]);
 
 }
@@ -133,9 +152,9 @@ const declineNotification = () => {
 
   if (peer.Tid) {
 
-  return (
-<>
-  <ToastContainer/>
+    return (
+      <>
+
 {call && <div class="bg-white  p-4 rounded-md shadow-md items-center flex gap-4 justify-center fixed top-4 right-4 shadow-xl ">
           <p className='text-stone-800 text-lg font-medium'>Call from {call.user_by_name}</p>
           <div onClick={handleAnswer} className='rounded-full w-10  h-10 bg-green-500 items-center flex  justify-center cursor-pointer'>
@@ -149,7 +168,10 @@ const declineNotification = () => {
     <div className=" w-full bg-slate-300 flex flex-col ">
       <div className='w-full bg-white items-center flex h-16 border'>
         <div className='rounded-full border overflow-hidden ms-2 h-12 w-12 '>
-          <img className='object-cover' src={baseURL+peer.image} alt="" />
+        {peer.image ?<img 
+                        src={baseURL+peer.image}
+                        alt=""
+                        /> : <FaUserCircle className='text-stone-400' size={45}/>}
         </div> 
         <div className='borde ms-10 gap-0 flex-col w-auto h-10'>
         <h3 className=' tracking-wide text-slate-600 font-medium text-xl font-sans'>{peer.name}</h3>
@@ -161,13 +183,12 @@ const declineNotification = () => {
         </div>
       </div>
       
-
+      {media && (<MediaPreviewModal media={media} onClose={()=>setMedia()} sendMedia={sendMedia}/>)}
       <div className=' overflow-y-auto h-[470px] w-full p-5'>
-        
         <div className='p-5 ms-5 overflow-y-  me-5 flex-col flex'>
           {messages.map((message,index)=>(
             <div
-              key={index} 
+            key={index} 
               ref={index === messages.length - 1 ? lastMessageRef : null}
               className={`m-3  w-96 ${message.userId == user.id ? 'ml-auto' : ''} flex`}
               >
@@ -187,14 +208,17 @@ const declineNotification = () => {
         </div>
         
       </div>
+          
+
         <form onSubmit={handleSendMsg}>
       <div className='mt-auto items-center ps-5 pe-5 flex justify-center ' >
           <div className='rounded-full items-center flex  justify-center  bg-white w-full h-14 mb-3'>
             <input type="text" placeholder='Message' value={msg} onChange={e=>setMsg(e.target.value)} className={' w-11/12    focus:outline-0  rounded-md'}/>
-            <label htmlFor="fileInput">
-            <input id="fileInput" type="file" className='hidden' />
+            {/* <label htmlFor="fileInput">
+            <input id="fileInput" onChange={(e)=>setMedia(e.target.files[0])} accept="image/*, video/*" type="file" className='hidden' />
             <GrAttachment className='cursor-pointer' size={20}/>
-            </label>
+            </label> */}
+            <button type='submit'><IoSend className='text-stone-700' size={22}/></button>
           </div>
 
       </div>
@@ -205,7 +229,7 @@ const declineNotification = () => {
     
  </>
   )
-          }else{
+}else{
             return ( 
             <>
               {call && <div class="bg-white  p-4 rounded-md shadow-md items-center flex gap-4 justify-center fixed top-4 right-4 shadow-xl ">
