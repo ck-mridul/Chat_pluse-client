@@ -47,10 +47,14 @@ function RegisterPage() {
   const formValidation = (name,value)=>{
     switch (name) {
       case 'name':
-        if (value.trim() === ''){
-          setInputError(prev => ({...prev, name: 'Name can\'t be empty!'}));
-        }else{
-          setInputError(prev => ({...prev, name: ''}));
+        if (value.trim() === '') {
+          setInputError(prev => ({ ...prev, name: 'Name can\'t be empty!' }));
+        } else if (value.trim().length < 3) {
+          setInputError(prev => ({ ...prev, name: 'Name must be at least 3 characters long!' }));
+        } else if (!/^[a-zA-Z ]+$/.test(value.trim())) {
+          setInputError(prev => ({ ...prev, name: 'Name can only contain letters and spaces!' }));
+        } else {
+          setInputError(prev => ({ ...prev, name: '' }));
         }
         break;
       case 'email':

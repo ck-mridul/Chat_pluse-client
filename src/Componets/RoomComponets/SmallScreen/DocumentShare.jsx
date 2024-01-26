@@ -11,11 +11,12 @@ function UsersList() {
     const room_id = localStorage.getItem('thread_id');
     const lastMessageRef = useRef(null);
     const [doc, setDoc] = useState();
+    const token = localStorage.getItem('accessToken')
 
 
     const endPoint = useMemo(
         () => {
-            return `${wsURL}/ws/doc/${room_id}/`;
+            return `${wsURL}/ws/doc/${room_id}/?token=${token}`;
         },
         [room_id]
 

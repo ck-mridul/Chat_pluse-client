@@ -12,22 +12,32 @@ import { useNavigate } from 'react-router-dom';
 import { FaUserCircle } from "react-icons/fa"; 
 import MediaPreviewModal from '../../Modals/sendMedias';
 import { IoSend } from "react-icons/io5";
+import { useChangeEffect } from './Context';
+import DeleteDropdwon from '../../Modals/DeleteDropdwon';
+import addNotification from 'react-push-notification';
+import { store } from '../../../Redux/store';
+import { setPeer } from '../../../Redux/peerSlice';
+
+
 
 
 
 
 function Chat() {
   const peer = useSelector((state) => state.peer.peer);
+  localStorage.setItem('contact',peer.userId)
   const [messages, setMessages] = useState([]);
   const [msg, setMsg] = useState('');
   const [call, setCall] = useState();
   const [media, setMedia] = useState();
   const lastMessageRef = useRef(null);
+  const [delMsg, setDelMsg] = useState(false);
   
   const user = JSON.parse(localStorage.getItem('user'))
   const Tid = peer.Tid
   const navigate = useNavigate()
   const token = localStorage.getItem('accessToken')
+  const { setChangeEffect } = useChangeEffect();
  
   const webSocket = useMemo(() => new WebSocket(wsURL+`/ws/peerchat/${user.id}/?token=${token}`), []);
 
@@ -40,7 +50,7 @@ function Chat() {
       })
     }
     
-  }, [peer,Tid]);
+  }, [peer,Tid,delMsg]);
 
   useEffect(() => {
     if (lastMessageRef.current) {
@@ -48,6 +58,14 @@ function Chat() {
     }
 }, [messages]);
 
+const pushNotification = (userName)=>{
+  addNotification({
+    title:"Push notify",
+    message:`You have a message from ${userName}`,
+    duration:4000,
+    native:true,
+  })
+}  
 
 const declineNotification = () => {
     toast.error('Call Rejected!', {
@@ -56,17 +74,41 @@ const declineNotification = () => {
     });
   };
 
+  const handleBlock = (message)=>{
+    if(message.message === 'blocked'){
+      store.dispatch(setPeer({...peer,block_by:message.block_by}))
+    }else{
+      store.dispatch(setPeer({...peer,block_by:null}))
+    }
+    setChangeEffect(new Date())
+  }
+
   const handleSendMsg = (e)=>{
     e.preventDefault()
+    console.log('msg come',peer.block_by)
+    if (msg.trim() === "" || peer.block_by) return
+         
     const data = JSON.stringify({
       message:msg,
       sent_by:user.id,
+      sent_by_name:user.name,
       send_to:peer.userId,
       thread_id:Tid
     })
     webSocket.send(data)
     setMsg('')
 
+  }
+
+  
+  const DeleteMsg = (id)=>{
+    const data = JSON.stringify({
+      message:'delete',
+      sent_by:user.id,
+      send_to:peer.userId,
+      id : id
+    })
+    webSocket.send(data)
   }
 
   const sendMedia = ()=>{ 
@@ -144,9 +186,22 @@ const declineNotification = () => {
       navigate('/videocall')
      return 
     }
-     
-    setMessages(prevMessages => [...prevMessages, msg]);
-
+    if(msg.message === 'deleted'){
+      console.log(msg)
+      if(msg.delete_by === user.id || msg.delete_by === peer.userId) setDelMsg(new Date())
+       return 
+    }
+     if(msg.messages === 'blocked' || msg.message === 'unblocked'){
+      handleBlock(msg)
+      return
+     }
+    if(msg.userId === peer.userId || msg.userId === user.id) setMessages(prevMessages => [...prevMessages, msg]);
+    setChangeEffect(new Date())
+    if(msg.userId !== user.id && msg.userId !== peer.userId){
+      console.log(msg.userId,user.id,'blalas')
+      pushNotification(msg.userName) 
+    }
+ 
 }
 
 
@@ -179,7 +234,7 @@ const declineNotification = () => {
         </div>
         <div className='me-4 gap-5 flex ml-auto'>
         <IoVideocamOutline className='text-slate-500 cursor-pointer' size={30} onClick={handleVideoCall} />
-        <Dropdown threadId={Tid} />
+        <Dropdown threadId={Tid} userId={user.id} block_to={peer.userId} />
         </div>
       </div>
       
@@ -194,18 +249,18 @@ const declineNotification = () => {
               >
             <div className={`rounded-lg  p-3 px-5 ${message.userId == user.id ? 'ml-auto bg-sky-500' : 'bg-blue-300'} text-xl text-stone-800 max-w-64 overflow-auto break-all inline-block`}>
               {message.message}
-            </div>
-            {/* <div className='text-sm mt-1  text-slate-600 inline-block'>
-              Extra Text
-            </div> */}
+            </div>         
+            {message.userId == user.id && <div className='text-lg mb-auto mt-1 transition-opacity hover:opacity-100 opacity-0  text-slate-600 inline-block cursor-pointer'>
+            <DeleteDropdwon id={message.id} DeleteMsg={DeleteMsg}/>
+            </div>}
           </div>
-          
-          
-          
           
           ))}
 
         </div>
+        {peer.block_by && <div className='items-center flex justify-center'>
+          <p className='bg-stone-500 rounded p-1' >{peer.block_by === user.id ? 'You blocked this contact' :`${peer.name} blocked you`}</p>
+        </div>}
         
       </div>
           

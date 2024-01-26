@@ -7,12 +7,13 @@ function Chat() {
     const [message, setMessage] = useState();
     const [messages, setMessages] = useState([]);
     const lastMessageRef = useRef(null);
+    const token = localStorage.getItem('accessToken')
 
 
     const user = JSON.parse(localStorage.getItem('user'))
     const endPoint = useMemo(
     () => {
-        return `${wsURL}/ws/chat/${room_id}/`;
+        return `${wsURL}/ws/chat/${room_id}/?token=${token}`;
     },
     [room_id]
 

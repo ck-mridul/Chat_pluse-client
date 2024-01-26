@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export const baseURL = 'http://3.27.137.99:8000';
-export const wsURL = 'ws://3.27.137.99:8000';
+export const baseURL = 'http://127.0.0.1:8000';
+export const wsURL = 'ws://127.0.0.1:8000';
 
 export const axiosInstance = axios.create({
   baseURL: `${baseURL}/api`,
@@ -25,7 +25,7 @@ axiosAuth.interceptors.request.use(
   }
 );
 
-
+ 
 
 axiosAuth.interceptors.response.use(
   (response) => {
