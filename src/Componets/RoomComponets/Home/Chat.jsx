@@ -27,7 +27,7 @@ function Chat() {
   const [media, setMedia] = useState();
   const lastMessageRef = useRef(null);
   const [delMsg, setDelMsg] = useState(false);
-  const { setChangeEffect,peer,setPeer } = useChangeEffect();
+  const { setChangeEffect,peer,setPeer,selectPeer } = useChangeEffect();
   
   localStorage.setItem('contact',peer.userId)
   const user = JSON.parse(localStorage.getItem('user'))
@@ -54,13 +54,11 @@ function Chat() {
     }
 }, [messages]);
 
-const pushNotification = (userName)=>{
-  addNotification({
-    title:"Push notify",
-    message:`You have a message from ${userName}`,
-    duration:4000,
-    native:true,
-  })
+const toastNotification = (userName)=>{
+  toast.success(`You have a message from ${userName}`, {
+      position: toast.POSITION.TOP_LEFT,
+      autoClose: 3000, // 3 seconds
+    });
 }  
 
 const declineNotification = () => {
@@ -89,7 +87,7 @@ const declineNotification = () => {
       sent_by:user.id,
       sent_by_name:user.name,
       send_to:peer.userId,
-      thread_id:Tid
+      thread_id:Tid,
     })
     webSocket.send(data)
     setMsg('')
@@ -189,7 +187,7 @@ const declineNotification = () => {
       if(msg.delete_by === user.id || msg.delete_by === peer.userId) setDelMsg(new Date())
        return 
     }
-     if(msg.messages === 'blocked' || msg.message === 'unblocked'){
+     if(msg.message === 'blocked' || msg.message === 'unblocked'){
       handleBlock(msg)
       return
      }
@@ -197,7 +195,7 @@ const declineNotification = () => {
     setChangeEffect(new Date())
     if(msg.userId !== user.id && msg.userId !== peer.userId){
       console.log(msg.userId,user.id,'blalas')
-      pushNotification(msg.userName) 
+      toastNotification(msg.userName) 
     }
  
 }

@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {IoSend} from "react-icons/io5";
 import { wsURL } from '../../../../services/api/axios_config';
+import {UserCircleIcon } from '@heroicons/react/24/outline'
+
 
 function Chat() {
     const room_id = localStorage.getItem('thread_id');
@@ -76,11 +78,13 @@ chatSocket.onmessage = (message)=>{
                                 <div
                                     className={`flex w-full items-center gap-2 ${message.user.id === user.id ? 'flex-row-reverse' : 'flex-row'}`}
                                 >
-                                    <img
+                                    {message.user.image ? <img
                                         src={message.user.image}
                                         alt={''}
                                         className={'object-cover w-8 h-8 rounded-full'}
-                                    />
+                                    /> :
+                                    <UserCircleIcon className="w-8 h-8 text-gray-400"/>
+                                    }
                                     <div className={'flex flex-col'}>
                                         <span
                                             className={
