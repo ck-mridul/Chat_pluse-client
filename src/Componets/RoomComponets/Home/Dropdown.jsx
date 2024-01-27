@@ -2,10 +2,7 @@ import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import axiosAuth from '../../../services/api/axios_config';
-import { clearPeer,setPeer } from '../../../Redux/peerSlice';
-import { store } from '../../../Redux/store';
 import { useChangeEffect } from './Context';
-import { useSelector } from 'react-redux';
 import {  toast } from 'react-toastify';
 
 
@@ -14,15 +11,15 @@ function classNames(...classes) {
 }
 
 export default function Dropdown(props) {
-  const { setChangeEffect } = useChangeEffect();
-  const peer = useSelector((state) => state.peer.peer);
+  const { setChangeEffect,peer,setPeer,setSelectPeer } = useChangeEffect();
   const user = JSON.parse(localStorage.getItem('user'))
   
     const handleRemove = ()=>{
         console.log(props)
         axiosAuth.post('/peerchat/removefriend/',props).then(res=>{
             setChangeEffect(res)
-            store.dispatch(clearPeer())
+            setPeer({})
+            setSelectPeer()
         })
     }
 
@@ -31,9 +28,9 @@ export default function Dropdown(props) {
       axiosAuth.post('/peerchat/blockcontact/',props).then(res=>{
           console.log(res.data.message,'rsponehjhj')
           if(res.data.message === 'blocked'){
-            store.dispatch(setPeer({...peer,block_by:res.data.block_by}))
+            setPeer({...peer,block_by:res.data.block_by})
           }else{
-            store.dispatch(setPeer({...peer,block_by:null}))
+            setPeer({...peer,block_by:null})
           }
           setChangeEffect(new Date())
       }).catch(err=>{

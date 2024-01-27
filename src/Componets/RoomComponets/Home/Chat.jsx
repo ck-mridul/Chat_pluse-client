@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react'
 import { IoVideocamOutline } from "react-icons/io5";
 import { GrAttachment } from "react-icons/gr";
-import { useSelector } from 'react-redux';
 import axiosAuth, { baseURL } from '../../../services/api/axios_config';
 import { wsURL } from '../../../services/api/axios_config';
 import chat_img from '../../../assets/logo/chat_img.webp'
@@ -15,8 +14,6 @@ import { IoSend } from "react-icons/io5";
 import { useChangeEffect } from './Context';
 import DeleteDropdwon from '../../Modals/DeleteDropdwon';
 import addNotification from 'react-push-notification';
-import { store } from '../../../Redux/store';
-import { setPeer } from '../../../Redux/peerSlice';
 
 
 
@@ -24,20 +21,19 @@ import { setPeer } from '../../../Redux/peerSlice';
 
 
 function Chat() {
-  const peer = useSelector((state) => state.peer.peer);
-  localStorage.setItem('contact',peer.userId)
   const [messages, setMessages] = useState([]);
   const [msg, setMsg] = useState('');
   const [call, setCall] = useState();
   const [media, setMedia] = useState();
   const lastMessageRef = useRef(null);
   const [delMsg, setDelMsg] = useState(false);
+  const { setChangeEffect,peer,setPeer } = useChangeEffect();
   
+  localStorage.setItem('contact',peer.userId)
   const user = JSON.parse(localStorage.getItem('user'))
   const Tid = peer.Tid
   const navigate = useNavigate()
   const token = localStorage.getItem('accessToken')
-  const { setChangeEffect } = useChangeEffect();
  
   const webSocket = useMemo(() => new WebSocket(wsURL+`/ws/peerchat/${user.id}/?token=${token}`), []);
 
@@ -76,9 +72,9 @@ const declineNotification = () => {
 
   const handleBlock = (message)=>{
     if(message.message === 'blocked'){
-      store.dispatch(setPeer({...peer,block_by:message.block_by}))
+      setPeer({...peer,block_by:message.block_by})
     }else{
-      store.dispatch(setPeer({...peer,block_by:null}))
+      setPeer({...peer,block_by:null})
     }
     setChangeEffect(new Date())
   }
@@ -136,6 +132,8 @@ const declineNotification = () => {
   }
 
   const handleVideoCall = ()=>{
+    if(peer.block_by) return
+
     const data = JSON.stringify({
       videocall : 'call',
       sent_by:user.id,

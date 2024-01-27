@@ -1,9 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import AxiosAuth from '../../../services/api/axios_config'
 import axiosAuth, { baseURL } from '../../../services/api/axios_config'
-import { setPeer } from '../../../Redux/peerSlice';
-import { store } from '../../../Redux/store';
-import { clearUser } from '../../../Redux/userSlice';
 import {IoPersonAddOutline} from 'react-icons/io5'
 import { RxCross2 } from "react-icons/rx";
 import { useChangeEffect } from './Context';
@@ -14,11 +11,10 @@ import { FaUserCircle } from "react-icons/fa";
 
 function Contactlist() {
     const [friends, setFriends] = useState([]);
-    const [selectPeer, setSelectPeer] = useState();
     const user = JSON.parse(localStorage.getItem('user'))
     const [search, setSearch] = useState('');
     const [searchR, setSearchR] = useState([]);
-    const { changeEffect,setChangeEffect } = useChangeEffect();
+    const { changeEffect,setChangeEffect,setPeer,selectPeer,setSelectPeer } = useChangeEffect();
     const navigate = useNavigate()
  
     useEffect(() => {
@@ -28,7 +24,7 @@ function Contactlist() {
         }).catch((err)=>{
             console.log(err)
             localStorage.clear()
-            store.dispatch(clearUser())
+            setPeer({})
             navigate('/login')
              
         })
@@ -47,14 +43,14 @@ function Contactlist() {
         if (selectPeer === userId) return
         console.log(userId)
         setSelectPeer(userId)
-        store.dispatch(setPeer({
+        setPeer({
             userId,
             Tid,
             name,
             email,
             image,
             block_by,
-        })) 
+        })
     }
 
     const debounce = (func)=>{
@@ -103,6 +99,7 @@ function Contactlist() {
                 contact.name,
                 contact.email,
                 contact.image,
+                res.data.block_by
 
             )
 

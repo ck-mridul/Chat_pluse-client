@@ -1,7 +1,6 @@
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import axiosAuth from '../../services/api/axios_config';
 
 
 

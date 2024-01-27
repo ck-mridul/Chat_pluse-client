@@ -5,9 +5,20 @@ const changeEffectContext = createContext();
 
 export const ChangeEffectProvider = ({ children }) => {
     const [changeEffect, setChangeEffect] = useState(null);
+    const [peer, setPeer] = useState({});
+    const [selectPeer, setSelectPeer] = useState();
+
 
   return (
-    <changeEffectContext.Provider value={{ changeEffect, setChangeEffect }}>
+    <changeEffectContext.Provider value={{
+       changeEffect,
+        setChangeEffect,
+        peer,
+        setPeer,
+        selectPeer,
+        setSelectPeer
+        }}>
+          
       {children}
     </changeEffectContext.Provider>
   );
