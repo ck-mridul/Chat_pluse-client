@@ -3,6 +3,7 @@ import axios from 'axios';
 export const baseURL = 'http://13.211.162.117';
 export const wsURL = 'ws://13.211.162.117';
 
+
 export const axiosInstance = axios.create({
   baseURL: `${baseURL}/api`,
 });

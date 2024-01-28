@@ -18,7 +18,7 @@ function UsersList() {
         () => {
             return `${wsURL}/ws/doc/${room_id}/?token=${token}`;
         },
-        [room_id]
+        [room_id,token]
 
     );
 
@@ -106,7 +106,7 @@ function UsersList() {
                                 {/* <div className='rounded-sm bg-gray-300 '></div> */}
                                 <GoMoveToBottom onClick={()=>{handleDownload(doc.pdf,doc.name)}} className='ml-auto text-slate-300 font-bold cursor-pointer'/>
                                  </div>
-                                  <sapan className='text-white ms-4 text-xs'>{user.id == doc.user_id ? 'You' : doc.user_name}</sapan>
+                                  <sapan className='text-white ms-4 text-xs'>{user.id === doc.user_id ? 'You' : doc.user_name}</sapan>
                                   </div>
                                  
                         ))

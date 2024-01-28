@@ -28,15 +28,7 @@ export const userRegister = async ({name,email,password})=>{
     }
 }
 
-export const getUser = async()=>{
-    try{
-        const responce = await axiosAuth.get('/authentication/getuser')
 
-    }
-    catch(error){
-        localStorage.clear()
-    }
-}
 export const emailVerification = async ({token})=>{
     try{
         await axiosInstance.post('/authentication/verify/', {token});

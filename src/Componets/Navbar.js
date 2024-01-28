@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import {UserCircleIcon } from '@heroicons/react/24/outline'
 import 'tailwindcss/tailwind.css'; //react styles
@@ -93,7 +93,7 @@ export default function Navbar() {
 
                     <div className={'flex flex-row w-max justify-center gap-2.5 border border-2 border-primary border-slate-400 shadow p-2.5 rounded m-1'}>
                               <div style={{width: '50px', height: '50px'}}>
-                                  {user.image ? <img src={user.image}
+                                  {user.image ? <img src={user.image} alt="user"
                                        className={'object-cover rounded h-full w-full border-accent-color-one dark:border-dark-accent-color-one'}/>
                                       :<UserCircleIcon className="w-10 h-10 text-gray-400" />}
                               </div>

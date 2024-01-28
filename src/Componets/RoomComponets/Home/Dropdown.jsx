@@ -80,7 +80,7 @@ export default function Dropdown(props) {
               )}
             </Menu.Item>
 
-            {(peer.block_by == user.id || !peer.block_by) && <Menu.Item>
+            {(peer.block_by === user.id || !peer.block_by) && <Menu.Item>
               {({ active }) => (
                 <button
                 type='button'

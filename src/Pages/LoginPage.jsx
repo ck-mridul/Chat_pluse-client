@@ -18,7 +18,7 @@ function LoginPage() {
       navigate(previousPath)
     }
     
-  }, [user]);
+  }, [user,location.state,navigate]);
 
   const errorTost = (errorMsg) => {
     toast.error(errorMsg, {

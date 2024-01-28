@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import { useNavigate } from 'react-router-dom';
-import axiosAuth from '../../../services/api/axios_config';
 
 
 
@@ -20,14 +19,13 @@ export default function App() {
   const roomID = localStorage.getItem('thread_id');
   var zp;
 
-
 useEffect(() => {
   
   return () => {
     zp.hangUp()
     zp.destroy()
   };
-}, []);
+}, [zp]);
 
   const user = JSON.parse(localStorage.getItem('user'));
   const userName = user.name;

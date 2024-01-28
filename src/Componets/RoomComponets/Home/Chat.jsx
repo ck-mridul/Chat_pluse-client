@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react'
 import { IoVideocamOutline } from "react-icons/io5";
-import { GrAttachment } from "react-icons/gr";
+// import { GrAttachment } from "react-icons/gr";
 import axiosAuth, { baseURL } from '../../../services/api/axios_config';
 import { wsURL } from '../../../services/api/axios_config';
 import chat_img from '../../../assets/logo/chat_img.webp'
@@ -13,7 +13,7 @@ import MediaPreviewModal from '../../Modals/sendMedias';
 import { IoSend } from "react-icons/io5";
 import { useChangeEffect } from './Context';
 import DeleteDropdwon from '../../Modals/DeleteDropdwon';
- 
+
 
 
 
@@ -26,7 +26,7 @@ function Chat() {
   const [media, setMedia] = useState();
   const lastMessageRef = useRef(null);
   const [delMsg, setDelMsg] = useState(false);
-  const { setChangeEffect,peer,setPeer,selectPeer } = useChangeEffect();
+  const { setChangeEffect,peer,setPeer } = useChangeEffect();
   
   localStorage.setItem('contact',peer.userId)
   const user = JSON.parse(localStorage.getItem('user'))
@@ -34,7 +34,7 @@ function Chat() {
   const navigate = useNavigate()
   const token = localStorage.getItem('accessToken')
  
-  const webSocket = useMemo(() => new WebSocket(wsURL+`/ws/peerchat/${user.id}/?token=${token}`), []);
+  const webSocket = useMemo(() => new WebSocket(wsURL+`/ws/peerchat/${user.id}/?token=${token}`), [token,user.id]);
 
   useEffect(() => {
     if(Tid){
@@ -105,7 +105,7 @@ const declineNotification = () => {
   }
 
   const sendMedia = ()=>{ 
-    let formData = new FormData
+    let formData = new FormData()
     let media_type
     if(media.type.startsWith('image')){
       media_type = 'image'
@@ -240,12 +240,12 @@ const declineNotification = () => {
             <div
             key={index} 
               ref={index === messages.length - 1 ? lastMessageRef : null}
-              className={`m-3  w-96 ${message.userId == user.id ? 'ml-auto' : ''} flex`}
+              className={`m-3  w-96 ${message.userId === user.id ? 'ml-auto' : ''} flex`}
               >
-            <div className={`rounded-lg  p-3 px-5 ${message.userId == user.id ? 'ml-auto bg-sky-500' : 'bg-blue-300'} text-xl text-stone-800 max-w-64 overflow-auto break-all inline-block`}>
+            <div className={`rounded-lg  p-3 px-5 ${message.userId === user.id ? 'ml-auto bg-sky-500' : 'bg-blue-300'} text-xl text-stone-800 max-w-64 overflow-auto break-all inline-block`}>
               {message.message}
             </div>         
-            {message.userId == user.id && <div className='text-lg mb-auto mt-1 transition-opacity hover:opacity-100 opacity-0  text-slate-600 inline-block cursor-pointer'>
+            {message.userId === user.id && <div className='text-lg mb-auto mt-1 transition-opacity hover:opacity-100 opacity-0  text-slate-600 inline-block cursor-pointer'>
             <DeleteDropdwon id={message.id} DeleteMsg={DeleteMsg}/>
             </div>}
           </div>

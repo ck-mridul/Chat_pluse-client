@@ -17,7 +17,7 @@ function Chat() {
     () => {
         return `${wsURL}/ws/chat/${room_id}/?token=${token}`;
     },
-    [room_id]
+    [room_id,token]
 
 );
 

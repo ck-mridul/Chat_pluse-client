@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import AxiosAuth from '../../../services/api/axios_config'
 import axiosAuth, { baseURL } from '../../../services/api/axios_config'
-import {IoPersonAddOutline} from 'react-icons/io5'
 import { RxCross2 } from "react-icons/rx";
 import { useChangeEffect } from './Context';
 import { useNavigate } from 'react-router-dom';
 import { FaUserCircle } from "react-icons/fa";
-// import debounce from 'lodash/debounce';
 
 
 function Contactlist() {
@@ -29,7 +27,7 @@ function Contactlist() {
              
         })
         
-    }, [changeEffect]);
+    }, [changeEffect,navigate,setPeer]);
 
     const handleselectPeer = (
         userId,
@@ -131,7 +129,7 @@ function Contactlist() {
                 friend.second_person.image,
                 friend.block_by,
                 )}
-                 className={`h-16 border ${friend.second_person.id == selectPeer ? 'bg-blue-300' : 'hover:bg-slate-200'} items-center flex cursor-pointer`} >
+                 className={`h-16 border ${friend.second_person.id === selectPeer ? 'bg-blue-300' : 'hover:bg-slate-200'} items-center flex cursor-pointer`} >
                 <div className='rounded-full border overflow-hidden h-14 w-14'>
                 {friend.second_person.image ?<img
                         src={baseURL+friend.second_person.image}
@@ -139,7 +137,7 @@ function Contactlist() {
                       /> : <FaUserCircle className='text-stone-400' size={55}/>}
                 </div>
                 <h3 className='ms-10 tracking-wide text-slate-600 font-medium text-xl font-sans'>{friend.second_person.name}</h3>
-            </div>
+             </div>
             )  : (
                 friend.first_person.id !== user.id && !friend.hide_by_second && (
                 <div key={index} onClick={()=>handleselectPeer(
@@ -150,7 +148,7 @@ function Contactlist() {
                     friend.first_person.image,
                     friend.block_by,
                 )}
-                 className={`h-16 border ${friend.first_person.id == selectPeer ? 'bg-blue-300' : 'hover:bg-slate-200'} items-center flex cursor-pointer`}>
+                 className={`h-16 border ${friend.first_person.id === selectPeer ? 'bg-blue-300' : 'hover:bg-slate-200'} items-center flex cursor-pointer`}>
                     <div className='rounded-full border overflow-hidden h-14 w-14'>
                     {friend.first_person.image ?<img
                         src={baseURL+friend.first_person.image}

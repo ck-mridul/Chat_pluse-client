@@ -30,7 +30,7 @@ function RegisterPage() {
       navigate(previousPath)
     }
     
-  }, [user]);
+  }, [user,location.state,navigate]);
 
   const sweetalert = ()=>{
     Swal.fire({
