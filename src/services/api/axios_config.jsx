@@ -1,15 +1,15 @@
 import axios from 'axios';
-export const baseURL = 'http://13.211.162.117:8000';
-export const baseURL1 = 'http://13.211.162.117';
-export const wsURL = 'ws://13.211.162.117';
+export const baseURL = 'https://13.211.162.117:8000';
+export const baseURL1 = 'https://13.211.162.117';
+export const wsURL = 'wss://13.211.162.117';
 
 
 export const axiosInstance = axios.create({
-  baseURL: `http://13.211.162.117/api`,
+  baseURL: `${baseURL1}/api`,
 });
 
 const axiosAuth = axios.create({
-  baseURL: `http://13.211.162.117/api`,
+  baseURL: `${baseURL1}/api`,
 });
 
 axiosAuth.interceptors.request.use(
