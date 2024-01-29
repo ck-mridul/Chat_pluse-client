@@ -1,7 +1,7 @@
 import axios from 'axios';
-export const baseURL = 'https://13.211.162.117:8000';
-export const baseURL1 = 'https://13.211.162.117';
-export const wsURL = 'wss://13.211.162.117';
+export const baseURL = 'https://chatpluse.online';
+export const baseURL1 = 'https://chatpluse.online';
+export const wsURL = 'wss://chatpluse.online';
 
 
 export const axiosInstance = axios.create({
