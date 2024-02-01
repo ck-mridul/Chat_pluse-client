@@ -1,5 +1,5 @@
 import axios from 'axios';
-export const baseURL = 'https://chatpluse.online:8000';
+export const baseURL = 'https://54.206.113.89:8000';
 export const baseURL1 = 'https://chatpluse.online';
 export const wsURL = 'wss://chatpluse.online';
 
