@@ -31,6 +31,7 @@ function EmailVerification() {
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok',
         });
+        localStorage.clear()
         navigate('/login');
     };
 
