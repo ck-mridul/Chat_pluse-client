@@ -1,15 +1,14 @@
 import axios from 'axios';
-export const baseURL = 'https://54.206.113.89:8000';
-export const baseURL1 = 'https://chatpluse.online';
+export const baseURL = 'https://chatpluse.online';
 export const wsURL = 'wss://chatpluse.online';
 
 
 export const axiosInstance = axios.create({
-  baseURL: `${baseURL1}/api`,
+  baseURL: `${baseURL}/api`,
 });
 
 const axiosAuth = axios.create({
-  baseURL: `${baseURL1}/api`,
+  baseURL: `${baseURL}/api`,
 });
 
 axiosAuth.interceptors.request.use(
