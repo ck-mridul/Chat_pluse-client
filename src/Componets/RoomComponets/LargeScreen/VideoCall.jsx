@@ -34,8 +34,8 @@ useEffect(() => {
   const myMeeting = async (element) => {
     try {
     // generate Kit Token
-    const appID = 526677706;
-    const serverSecret = "19eefd1e1df31737b1d5239cb6358209";
+    const appID = 1126242936;
+    const serverSecret = "fc448e6302b96d23d521e84be51e347b";
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
       appID,
       serverSecret,
