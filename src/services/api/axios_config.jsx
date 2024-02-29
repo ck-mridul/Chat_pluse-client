@@ -1,5 +1,5 @@
 import axios from 'axios';
-export const baseURL = 'https://chatpluse.online';
+export const baseURL = 'https://chat-pluse.onrender.com';
 export const wsURL = 'wss://chatpluse.online';
 
 
