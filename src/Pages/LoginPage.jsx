@@ -4,6 +4,7 @@ import { PasswordField } from '../Componets/PasswordInput';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { userlogin } from '../services/api/auth';
 import {useSelector} from "react-redux";
+import { axiosInstance } from '../services/api/axios_config';
 
  
 function LoginPage() {
@@ -17,6 +18,7 @@ function LoginPage() {
       const previousPath = location.state?.from || '/';
       navigate(previousPath)
     }
+    const welcome = axiosInstance.get('/authentication/welcome/')
     
   }, [user,location.state,navigate]);
 
